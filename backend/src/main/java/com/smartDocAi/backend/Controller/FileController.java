@@ -1,12 +1,14 @@
 package com.smartDocAi.backend.Controller;
 
 import com.smartDocAi.backend.model.Document;
+import com.smartDocAi.backend.model.UploadedFile;
 import com.smartDocAi.backend.service.FileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/files")
@@ -20,12 +22,18 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<Document> uploadFile (@RequestParam("file") MultipartFile file){
+    public ResponseEntity<UploadedFile> uploadFile (@RequestParam("file") MultipartFile file){
         try{
-            Document savedDoc = fileService.saveFile(file);
+            UploadedFile savedDoc = fileService.saveFile(file);
             return ResponseEntity.ok(savedDoc);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UploadedFile>> getAllFiles(){
+        List<UploadedFile> files = fileService.getAllFiles();
+        return ResponseEntity.ok(files);
     }
 }
